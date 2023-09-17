@@ -37,15 +37,14 @@ code {
   border: 3px solid yellowgreen;
   width: 100px;
   height: 100px;
-  font-size: 128px;
+  font-size: 117px;
   display: flex;
   justify-content: center;
   align-items: center;
   color: darkturquoise;
 }
 .eachGrid:hover{
-  background-color: darkturquoise;
-  color: aquamarine;
+  
 }
 
 .two_diagonal{
@@ -155,4 +154,13 @@ border-radius: 50%;
 border: 3px solid blue;
 margin: 11px 0px;
 font-weight: bold;
+}
+
+
+
+@media(hover :hover){
+  .eachGrid:hover{
+    background-color: darkturquoise;
+    color: aquamarine;
+  }
 }
