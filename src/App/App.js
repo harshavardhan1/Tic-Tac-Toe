@@ -163,7 +163,7 @@ export default function App(props){
             <Timer duration={180} visibility={checkCondition('p_two')} className={'p_two_timer'} timeOut={()=>{handleTimeOut('p_two')}}/>
             <Dialog
             show={dialogText} 
-            onDismiss={()=>{jsConfetti.addConfetti()}}>
+            onDismiss={()=>{if(dialogText.includes('Won')){jsConfetti.addConfetti()}}}>
                 <div className='relative bg-[aliceblue] p-[51px] rounded-[9px] text-[blue] text-[30px] flex flex-col'>
                 {dialogText}
                 <span className="absolute top-[3px] right-[13px] font-bold text-[crimson] hover:text-[33px] cursor-pointer"
