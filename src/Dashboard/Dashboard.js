@@ -1,8 +1,16 @@
+import { useEffect, useState } from "react";
+import DarkModeTutorial from "../Tutorial/forDarkMode";
 import DarkMode from "../darkMode";
 export default function Dashboard(props){
+    const [showTutorial,setShowTutorial]=useState(null);
+    useEffect(()=>{
+       if(localStorage.getItem('showDarkModeTutorial') !== 'true')
+            setShowTutorial(true);
+    },[]);
     return (
         <div className="flex flex-col w-full h-[100vh] items-center justify-center bg-[aliceblue] dark:bg-[#000]">
-            <DarkMode className="absolute top-[21px] right-[21px]"/> 
+            <DarkMode className="absolute top-[21px] right-[21px]"/>
+            { showTutorial && <DarkModeTutorial removeTutorial={()=>{setShowTutorial(false);localStorage.setItem('showDarkModeTutorial',true)}}/>}
             {[['Computer',"Play with Computer"],['Offline','Play with teammate adjacent'],['Create Lobby','Play with online friend'],['Join Lobby','Play with online friend']].map((each,index)=>{
                 return <button
                     key={index}

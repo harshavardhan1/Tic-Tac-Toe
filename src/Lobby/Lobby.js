@@ -13,6 +13,7 @@ export default function Lobby(props) {
     const [inputValue, setInputValue] = useState('');
     const [showTimer,setShowTimer]=useState(false);
     const [dialogText,setDialogText]=useState('');
+    const [buttonStatus,setButtonStatus]=useState(false);
     const handleDialogClose=()=>{
         if(dialogText.includes('Expired') || dialogText.includes('Full')){
             props.stopGame();
@@ -28,6 +29,7 @@ export default function Lobby(props) {
         } else if (data.event === 9) {
             props.dispatch({ type: 'add_choice', player: 'p_two', choice: data['p_two_choice'] });
             setShowTimer(true);
+            setButtonStatus(true);
         }
     };
     const handleJoinLobby = (event, socket) => {
@@ -35,6 +37,7 @@ export default function Lobby(props) {
         if (data.event === 9) {
             socket.token = inputValue;
             setShowTimer(true);
+            setButtonStatus(true);
         }
         else if(data.event === 5){
             setDialogText('Sorry The Lobby is Expired');
@@ -53,6 +56,10 @@ export default function Lobby(props) {
                 return;
             }else if(data.event === 6){
                 setDialogText('Sorry the Lobby you want to join is Full');
+                socket.close();
+                return;
+            }else{
+                setDialogText('Sorry Invalid Token');
                 socket.close();
                 return;
             }
@@ -142,7 +149,7 @@ export default function Lobby(props) {
                         }
                     }}
                 />
-                <button style={{visibility:props.gameChoice === 'Join Lobby'?'visible':'hidden'}} 
+                <button disabled={buttonStatus} style={{visibility:props.gameChoice === 'Join Lobby'?'visible':'hidden'}} 
                     onClick={handleJoinLobbyToken}
                     className='mt-[16px]
                         text-[17px] text-[rgb(0,0,139)] p-[3px]

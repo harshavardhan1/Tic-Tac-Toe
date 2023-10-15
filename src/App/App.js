@@ -67,7 +67,7 @@ export default function App(props){
         let res = checkMatch(newState.grid, newState.moves);
         if (res) {
             callWin(res);
-            showWinDialog(state.player,props.gameData[state.player].choice);
+            showWinDialog(newState.player+'',props.gameData[newState.player].choice);
             closeSocket(props);
             dispatch({type:'emptyPlayer'})
             return;

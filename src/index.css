@@ -29,7 +29,6 @@ code {
   position: relative;
   grid-template-columns: auto auto auto;
   border: 3px solid yellowgreen;
-  cursor: pointer;
   overflow: hidden;
 }
 
@@ -162,5 +161,16 @@ font-weight: bold;
   .eachGrid:hover{
     background-color: darkturquoise;
     color: aquamarine;
+  }
+}
+
+@keyframes toAndFro{
+  from{
+    right:76px;
+    height: 69px;
+  }
+  to{
+    right:150px;
+    height: 80px;
   }
 }
