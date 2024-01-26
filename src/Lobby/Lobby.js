@@ -44,7 +44,7 @@ export default function Lobby(props) {
         }
     };
     const handleJoinLobbyToken = () => {
-        if(props.gameChoice === 'Create Lobby')
+        if(props.gameChoice === 'Create Lobby' || !inputValue)
             return;
         let socket = new WebSocket(socketURL);
         socket.onopen = () => socket.send(JSON.stringify({ event: 3, token: inputValue }));
@@ -63,8 +63,6 @@ export default function Lobby(props) {
                 socket.close();
                 return;
             }
-            props.dispatch({ type: 'add_choice', player: 'p_one', choice: data['p_one_choice'] });
-            setChoiceSelector(true);
         };
     };
     const handleSocketClose=()=>{

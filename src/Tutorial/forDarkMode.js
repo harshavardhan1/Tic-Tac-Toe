@@ -14,7 +14,7 @@ export default function DarkModeTutorial(props){
             <div className="absolute 
                 w-[60px] 
                 h-[60px] 
-                shadow-[0px_0px_0px_100vmax_rgba(60,60,60,0.6)]
+                shadow-[0px_0px_0px_9999px_rgba(60,60,60,0.6)]
                 top-[7px]
                 right-[7px]
                 rounded-[50%]

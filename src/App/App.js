@@ -63,7 +63,6 @@ export default function App(props){
         closeSocket(props);
     };
     const gridClick = (newState) => {
-        //const row = (index / 3) + 1, col = (index % 3) + 1;
         let res = checkMatch(newState.grid, newState.moves);
         if (res) {
             callWin(res);
@@ -93,9 +92,9 @@ export default function App(props){
     };
     const handleTimeOut=(player)=>{
         if(props.gameData.gameType === 'Create Lobby'){
-            setDialogText(player === 'p_one'?'You Lost beacuse timer out':'You Won because oppsoite player timer out');
+            setDialogText(player === 'p_one'?'You Lost beacuse timer out':'You Won because opposite player timer out');
         }else{
-            setDialogText(player === 'p_two'?'You Lost beacuse timer out':'You Won because oppsoite player timer out'); 
+            setDialogText(player === 'p_two'?'You Lost beacuse timer out':'You Won because opposite player timer out'); 
         } 
         closeSocket(props);
     };

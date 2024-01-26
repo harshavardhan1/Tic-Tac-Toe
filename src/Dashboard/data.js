@@ -1,1 +1,1 @@
-export const socketURL='ws://localhost:3001';
+export const socketURL='wss://clear-purring-avocado.glitch.me';

@@ -1,14 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-export default function BackButton(props){
-    const [beat,setBeat]=useState(false);
+export default function BackButton(props) {
+    const [beat, setBeat] = useState(false);
     return (
-        <FontAwesomeIcon 
+        <FontAwesomeIcon
             onClick={props.onClick}
-            onMouseEnter={()=>setBeat(true)}
-            onMouseLeave={()=>setBeat(false)}
-            icon={faLeftLong} 
+            onMouseEnter={() => setBeat(true)}
+            onMouseLeave={() => setBeat(false)}
+            icon={faLeftLong}
             beat={beat}
             className="
             text-[45px]
