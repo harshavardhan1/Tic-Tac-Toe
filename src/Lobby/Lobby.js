@@ -4,20 +4,20 @@ import { socketURL } from "../Dashboard/data";
 import Spinner from "../Spinner";
 import Timer from '../App/Timer';
 import Dialog from "../Dialog/Dialog";
-const forPlayerBox='flex flex-col justify-center items-center';
-const forChoice='text-[#FF00C7] text-[90px] leading-[100px] p-[0px_14px] border-[5px] border-solid border-[darkviolet] font-bold dark:border-[aliceblue] dark:text-[aquamarine]';
-const forPlayerText='mb-[10px] text-[mediumblue] text-[30px] font-bold dark:text-[aliceblue]';
-const forSpinner='flex items-center justify-center h-[110px] w-[103px]';
+const forPlayerBox = 'flex flex-col justify-center items-center';
+const forChoice = 'text-[#FF00C7] text-[90px] leading-[100px] p-[0px_14px] border-[5px] border-solid border-[darkviolet] font-bold dark:border-[aliceblue] dark:text-[aquamarine]';
+const forPlayerText = 'mb-[10px] text-[mediumblue] text-[30px] font-bold dark:text-[aliceblue]';
+const forSpinner = 'flex items-center justify-center h-[110px] w-[103px]';
 export default function Lobby(props) {
     const [choiceSelector, setChoiceSelector] = useState(false);
     const [inputValue, setInputValue] = useState('');
-    const [showTimer,setShowTimer]=useState(false);
-    const [dialogText,setDialogText]=useState('');
-    const [buttonStatus,setButtonStatus]=useState(false);
-    const handleDialogClose=()=>{
-        if(dialogText.includes('Expired') || dialogText.includes('Full')){
+    const [showTimer, setShowTimer] = useState(false);
+    const [dialogText, setDialogText] = useState('');
+    const [buttonStatus, setButtonStatus] = useState(false);
+    const handleDialogClose = () => {
+        if (dialogText.includes('Expired') || dialogText.includes('Full')) {
             props.stopGame();
-        }else{
+        } else {
             setDialogText('');
         }
     };
@@ -39,33 +39,38 @@ export default function Lobby(props) {
             setShowTimer(true);
             setButtonStatus(true);
         }
-        else if(data.event === 5){
+        else if (data.event === 5) {
             setDialogText('Sorry The Lobby is Expired');
         }
     };
     const handleJoinLobbyToken = () => {
-        if(props.gameChoice === 'Create Lobby' || !inputValue)
+        if (props.gameChoice === 'Create Lobby' || !inputValue)
             return;
         let socket = new WebSocket(socketURL);
         socket.onopen = () => socket.send(JSON.stringify({ event: 3, token: inputValue }));
         socket.onmessage = (event) => {
             let data = JSON.parse(event.data);
-            if(data.event === 5){
+            if (data['p_one_choice']) {
+                props.dispatch({ type: 'add_choice', player: 'p_one', choice: data['p_one_choice'] });
+                setChoiceSelector(true);
+                socket.close();
+                return;
+            } else if (data.event === 5) {
                 setDialogText('Sorry The Lobby is Expired');
                 socket.close();
                 return;
-            }else if(data.event === 6){
+            } else if (data.event === 6) {
                 setDialogText('Sorry the Lobby you want to join is Full');
                 socket.close();
                 return;
-            }else{
+            } else {
                 setDialogText('Sorry Invalid Token');
                 socket.close();
                 return;
             }
         };
     };
-    const handleSocketClose=()=>{
+    const handleSocketClose = () => {
         setDialogText('Sorry the Lobby time is Expired Please create another Lobby');
     };
     const choiceHandler = (selectedChoice) => {
@@ -75,7 +80,7 @@ export default function Lobby(props) {
         if (props.gameChoice === 'Create Lobby') {
             socket.onopen = () => socket.send(JSON.stringify({ event: 1, choice: selectedChoice }));
             socket.onmessage = (event) => handleCreateLobby(event, socket);
-            socket.onclose=handleSocketClose;
+            socket.onclose = handleSocketClose;
         } else {
             socket.onopen = () => socket.send(JSON.stringify({ event: 11, token: inputValue, choice: selectedChoice }));
             socket.onmessage = (event) => handleJoinLobby(event, socket);
@@ -88,16 +93,16 @@ export default function Lobby(props) {
         }
         return;
     }, []);
-    useEffect(()=>{
-        let temp=document.getElementById('navBar');
-        if(!choiceSelector){
-            temp.style.backgroundImage='linear-gradient(90deg,#FFDBDB 0.29%,rgba(255,251,160,0.65) 35.47%,rgba(122,255,89,0.25) 75.07%,rgba(0,194,255,0.36) 99.67%)';
-            temp.style.backgroundColor='';
-        }else{
-            temp.style.backgroundColor='#77C6FF';
-            temp.style.backgroundImage='';
+    useEffect(() => {
+        let temp = document.getElementById('navBar');
+        if (!choiceSelector) {
+            temp.style.backgroundImage = 'linear-gradient(90deg,#FFDBDB 0.29%,rgba(255,251,160,0.65) 35.47%,rgba(122,255,89,0.25) 75.07%,rgba(0,194,255,0.36) 99.67%)';
+            temp.style.backgroundColor = '';
+        } else {
+            temp.style.backgroundColor = '#77C6FF';
+            temp.style.backgroundImage = '';
         }
-    },[choiceSelector]);
+    }, [choiceSelector]);
     return (
         <>
             {choiceSelector && <ChoiceSelector
@@ -111,8 +116,8 @@ export default function Lobby(props) {
             bg-[linear-gradient(90deg,#FFDBDB_0.29%,rgba(255,251,160,0.65)_35.47%,rgba(122,255,89,0.25)_75.07%,rgba(0,194,255,0.36)_99.67%)]
             flex flex-col items-center dark:bg-none dark:bg-[#000]
             ">
-                <div 
-                    style={{visibility:props.gameChoice === 'Create Lobby'?'visible':'hidden'}}
+                <div
+                    style={{ visibility: props.gameChoice === 'Create Lobby' ? 'visible' : 'hidden' }}
                     className="
                     mt-[89px] 
                     md:text-[26px]
@@ -137,7 +142,7 @@ export default function Lobby(props) {
                     disabled={props.gameChoice === 'Create Lobby' ? true : false}
                     value={inputValue}
                     onChange={(event) => {
-                        if(props.gameChoice === 'Create Lobby')
+                        if (props.gameChoice === 'Create Lobby')
                             return;
                         setInputValue(event.target.value);
                     }}
@@ -147,7 +152,7 @@ export default function Lobby(props) {
                         }
                     }}
                 />
-                <button disabled={buttonStatus} style={{visibility:props.gameChoice === 'Join Lobby'?'visible':'hidden'}} 
+                <button disabled={buttonStatus} style={{ visibility: props.gameChoice === 'Join Lobby' ? 'visible' : 'hidden' }}
                     onClick={handleJoinLobbyToken}
                     className='mt-[16px]
                         text-[17px] text-[rgb(0,0,139)] p-[3px]
@@ -160,35 +165,35 @@ export default function Lobby(props) {
                     '
                 >Join</button>
                 <div className="flex justify-between w-[90%] mt-[41px]">
-                <div className={forPlayerBox}>
+                    <div className={forPlayerBox}>
                         <div className={forPlayerText}>P ONE</div>
                         {props['p_one_choice']
-                            ?<div className={forChoice}>{props['p_one_choice']}</div>
-                            :<div className={forChoice+' '+forSpinner}><Spinner radius={'65px'} borderHeight={'4px'} borderColor={'currentColor'} loaderColor={'blue'}/></div>
+                            ? <div className={forChoice}>{props['p_one_choice']}</div>
+                            : <div className={forChoice + ' ' + forSpinner}><Spinner radius={'65px'} borderHeight={'4px'} borderColor={'currentColor'} loaderColor={'blue'} /></div>
                         }
                     </div>
-                    <div className={forPlayerBox}><Timer duration={5} visibility={showTimer} className="font-bold text-[blue] text-[70px]" timeOut={()=>{props.startGame()}}/></div>
+                    <div className={forPlayerBox}><Timer duration={5} visibility={showTimer} className="font-bold text-[blue] text-[70px]" timeOut={() => { props.startGame() }} /></div>
                     <div className={forPlayerBox}>
                         <div className={forPlayerText}>P TWO</div>
                         {props['p_two_choice']
-                            ?<div className={forChoice}>{props['p_two_choice']}</div>
-                            :<div className={forChoice+' '+forSpinner}><Spinner radius={'65px'} borderHeight={'4px'} borderColor={'currentColor'} loaderColor={'blue'}/></div>
+                            ? <div className={forChoice}>{props['p_two_choice']}</div>
+                            : <div className={forChoice + ' ' + forSpinner}><Spinner radius={'65px'} borderHeight={'4px'} borderColor={'currentColor'} loaderColor={'blue'} /></div>
                         }
                     </div>
                 </div>
             </div>}
             <Dialog
-            show={dialogText} 
-            onDismiss={handleDialogClose}>
+                show={dialogText}
+                onDismiss={handleDialogClose}>
                 <div className='relative bg-[aliceblue] p-[51px] rounded-[9px] text-[blue] text-[30px] flex flex-col'>
-                {dialogText}
-                <span className="absolute top-[3px] right-[13px] font-bold text-[crimson] hover:text-[33px] cursor-pointer"
-                    onClick={handleDialogClose}
-                >X</span>
-                <span 
-                    className="self-center bg-[darksalmon] p-[0px_9px] rounded-[9px] font-bold hover:text-[darksalmon] hover:bg-[blue] cursor-pointer"
-                    onClick={handleDialogClose}
-                >OK</span>
+                    {dialogText}
+                    <span className="absolute top-[3px] right-[13px] font-bold text-[crimson] hover:text-[33px] cursor-pointer"
+                        onClick={handleDialogClose}
+                    >X</span>
+                    <span
+                        className="self-center bg-[darksalmon] p-[0px_9px] rounded-[9px] font-bold hover:text-[darksalmon] hover:bg-[blue] cursor-pointer"
+                        onClick={handleDialogClose}
+                    >OK</span>
                 </div>
             </Dialog>
         </>
